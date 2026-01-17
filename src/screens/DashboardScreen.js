@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useFinance } from '../context/FinanceContext';
 import { colors, layout } from '../theme/colors';
 import { Card } from '../components/Card';
@@ -17,7 +18,8 @@ export const DashboardScreen = () => {
         budgetVariable,
         actualFixed,
         actualVariable,
-        actualHormiga
+        actualHormiga,
+        balance
     } = useMemo(() => {
         const inc = incomes.reduce((sum, item) => {
             const freq = item.frequency || 1;
@@ -30,6 +32,8 @@ export const DashboardScreen = () => {
             .filter(e => e.type === type)
             .reduce((sum, e) => sum + parseFloat(e.amount), 0);
 
+        const totalExpenses = expByType('fijo') + expByType('variable') + expByType('hormiga');
+
         return {
             totalIncome: inc,
             budgetSavings: calcBudget(distribution.savings),
@@ -38,30 +42,55 @@ export const DashboardScreen = () => {
             actualFixed: expByType('fijo'),
             actualVariable: expByType('variable'),
             actualHormiga: expByType('hormiga'),
+            balance: inc - totalExpenses
         };
     }, [incomes, expenses, distribution]);
 
     const windowWidth = Dimensions.get('window').width;
     const isMobile = windowWidth < 768;
 
-    const SummaryCard = ({ title, amount, subtitle, color, onPress }) => (
-        <TouchableOpacity
-            onPress={onPress}
-            activeOpacity={0.7}
-            style={[
-                styles.cardContainer,
-                { width: isMobile ? '100%' : '48%' } // Responsive width
-            ]}
-        >
-            <Card style={[styles.summaryCard, { borderLeftColor: color, borderLeftWidth: 4 }]}>
-                <View style={styles.cardHeader}>
-                    <Text style={styles.cardTitle}>{title}</Text>
-                </View>
-                <Text style={[styles.cardAmount, { color: colors.text }]}>{formatCurrency(amount)}</Text>
-                {subtitle && <Text style={styles.cardSubtitle}>{subtitle}</Text>}
-            </Card>
-        </TouchableOpacity>
+    const BalanceHero = () => (
+        <View style={styles.heroContainer}>
+            <View>
+                <Text style={styles.heroLabel}>Balance General</Text>
+                <Text style={styles.heroAmount}>{formatCurrency(balance)}</Text>
+            </View>
+            <View style={styles.heroIcon}>
+                <Ionicons name="wallet" size={32} color={colors.primary} />
+            </View>
+        </View>
     );
+
+    const SummaryCard = ({ title, amount, subtitle, color, onPress, icon, progress, progressMax }) => {
+        const progressPercent = progressMax > 0 ? Math.min((progress / progressMax) * 100, 100) : 0;
+
+        return (
+            <TouchableOpacity
+                onPress={onPress}
+                activeOpacity={0.7}
+                style={[
+                    styles.cardContainer,
+                    { width: isMobile ? '100%' : '48%' }
+                ]}
+            >
+                <Card style={[styles.summaryCard, { borderLeftColor: color, borderLeftWidth: 4 }]}>
+                    <View style={styles.cardHeader}>
+                        <Text style={styles.cardTitle}>{title}</Text>
+                        {icon && <Ionicons name={icon} size={18} color={color} />}
+                    </View>
+                    <Text style={[styles.cardAmount, { color: colors.text }]}>{formatCurrency(amount)}</Text>
+
+                    {progressMax !== undefined && (
+                        <View style={styles.progressBarBg}>
+                            <View style={[styles.progressBarFill, { width: `${progressPercent}%`, backgroundColor: color }]} />
+                        </View>
+                    )}
+
+                    {subtitle && <Text style={styles.cardSubtitle}>{subtitle}</Text>}
+                </Card>
+            </TouchableOpacity>
+        );
+    };
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -70,20 +99,24 @@ export const DashboardScreen = () => {
                 <Text style={styles.headerDate}>{new Date().toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })}</Text>
             </View>
 
+            <BalanceHero />
+
             <View style={styles.grid}>
                 <SummaryCard
-                    title="Ingresos Mensuales"
+                    title="Ingresos"
                     amount={totalIncome}
-                    subtitle="Toca para editar"
+                    subtitle="Mensuales"
                     color={colors.success}
+                    icon="arrow-up-circle"
                     onPress={() => navigation.navigate('Ingresos')}
                 />
 
                 <SummaryCard
-                    title="Ahorro Mensual (Est.)"
+                    title="Ahorro Estimado"
                     amount={budgetSavings}
-                    subtitle={`Anual: ${formatCurrency(budgetSavings * 12)}`}
-                    color={colors.success}
+                    subtitle={`Meta anual: ${formatCurrency(budgetSavings * 12)}`}
+                    color={colors.accent}
+                    icon="shield-checkmark"
                     onPress={() => navigation.navigate('Configuración')}
                 />
 
@@ -92,22 +125,29 @@ export const DashboardScreen = () => {
                     amount={actualFixed}
                     subtitle={`Presupuesto: ${formatCurrency(budgetFixed)}`}
                     color={colors.danger}
+                    icon="home"
+                    progress={actualFixed}
+                    progressMax={budgetFixed}
                     onPress={() => navigation.navigate('Gastos', { type: 'fijo' })}
                 />
 
                 <SummaryCard
                     title="Gastos Variables"
                     amount={actualVariable}
-                    subtitle={`Disp: ${formatCurrency(budgetVariable - actualVariable - actualHormiga)}`}
+                    subtitle={`Disponible: ${formatCurrency(budgetVariable - actualVariable - actualHormiga)}`}
                     color={colors.warning}
+                    icon="cart"
+                    progress={actualVariable}
+                    progressMax={budgetVariable}
                     onPress={() => navigation.navigate('Gastos', { type: 'variable' })}
                 />
 
                 <SummaryCard
                     title="Gastos Hormiga"
                     amount={actualHormiga}
-                    subtitle="¡Cuidado con estos!"
-                    color={colors.warning}
+                    subtitle="¡Reduce estos gastos!"
+                    color={colors.danger}
+                    icon="bug"
                     onPress={() => navigation.navigate('Gastos', { type: 'hormiga' })}
                 />
             </View>
@@ -153,6 +193,9 @@ const styles = StyleSheet.create({
     },
     cardHeader: {
         marginBottom: 6,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
     cardTitle: {
         fontSize: 11, // Reduced from 13
@@ -170,5 +213,45 @@ const styles = StyleSheet.create({
         fontSize: 11, // Reduced from 13
         color: colors.textLight,
         fontWeight: '500',
+    },
+    heroContainer: {
+        backgroundColor: colors.surface,
+        padding: 24,
+        borderRadius: layout.borderRadius,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 20,
+        ...layout.shadow,
+    },
+    heroLabel: {
+        fontSize: 12,
+        color: colors.textLight,
+        fontWeight: '700',
+        textTransform: 'uppercase',
+        letterSpacing: 0.5,
+        marginBottom: 4,
+    },
+    heroAmount: {
+        fontSize: 32,
+        fontWeight: '800',
+        color: colors.text,
+        letterSpacing: -0.5,
+    },
+    heroIcon: {
+        backgroundColor: colors.background,
+        padding: 12,
+        borderRadius: 50,
+    },
+    progressBarBg: {
+        height: 6,
+        backgroundColor: colors.border,
+        borderRadius: 3,
+        marginVertical: 8,
+        overflow: 'hidden',
+    },
+    progressBarFill: {
+        height: '100%',
+        borderRadius: 3,
     }
 });
