@@ -27,7 +27,11 @@
       "display": "standalone",
       "themeColor": "#000000",
       "backgroundColor": "#ffffff",
-      "startUrl": "/"
+      "startUrl": "/",
+      "meta": {
+        "apple-mobile-web-app-capable": "yes",
+        "apple-mobile-web-app-status-bar-style": "black-translucent"
+      }
     }
   }
 }
