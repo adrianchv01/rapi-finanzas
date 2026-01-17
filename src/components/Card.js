@@ -16,6 +16,8 @@ const styles = StyleSheet.create({
         borderRadius: layout.borderRadius,
         padding: layout.padding,
         ...layout.shadow,
+        borderWidth: 1,
+        borderColor: colors.border, // Subtle container definition
         marginBottom: 16,
     }
 });

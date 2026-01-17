@@ -3,18 +3,26 @@ import { TouchableOpacity, Text, StyleSheet, ActivityIndicator } from 'react-nat
 import { colors, layout } from '../theme/colors';
 
 export const Button = ({ title, onPress, variant = 'primary', loading = false, style, textStyle }) => {
-    const backgroundColor = colors[variant] || colors.primary;
+    // Map variant strings to actual colors if needed, defaulting to primary black
+    let backgroundColor = colors.primary;
+    if (variant === 'danger') backgroundColor = colors.danger;
+    if (variant === 'secondary') backgroundColor = colors.border;
+    if (variant === 'success') backgroundColor = colors.success;
+
+    // Text color logic
+    const textColor = variant === 'secondary' ? colors.text : '#fff';
 
     return (
         <TouchableOpacity
             style={[styles.button, { backgroundColor }, style]}
             onPress={onPress}
             disabled={loading}
+            activeOpacity={0.8}
         >
             {loading ? (
-                <ActivityIndicator color="#fff" />
+                <ActivityIndicator color={textColor} />
             ) : (
-                <Text style={[styles.text, textStyle]}>{title}</Text>
+                <Text style={[styles.text, { color: textColor }, textStyle]}>{title}</Text>
             )}
         </TouchableOpacity>
     );
@@ -22,16 +30,16 @@ export const Button = ({ title, onPress, variant = 'primary', loading = false, s
 
 const styles = StyleSheet.create({
     button: {
-        paddingVertical: 14,
+        paddingVertical: 16,
         paddingHorizontal: 24,
-        borderRadius: layout.borderRadius,
+        borderRadius: 30, // Pill shape
         alignItems: 'center',
         justifyContent: 'center',
-        ...layout.shadow,
+        marginBottom: 12,
     },
     text: {
-        color: '#fff',
         fontSize: 16,
-        fontWeight: '600',
+        fontWeight: '700',
+        letterSpacing: 0.5,
     }
 });

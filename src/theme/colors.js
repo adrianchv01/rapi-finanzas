@@ -1,25 +1,25 @@
 export const colors = {
-    primary: '#10B981', // Green for savings/income
-    secondary: '#3B82F6', // Blue for UI elements
-    danger: '#EF4444', // Red for fixed expenses
-    warning: '#F97316', // Orange for variable expenses/hormiga
-    background: '#F3F4F6', // Light gray background
-    surface: '#FFFFFF', // White cards
-    text: '#1F2937', // Dark gray text
-    textLight: '#6B7280', // Light gray text
-    border: '#E5E7EB', // Border color
-    success: '#10B981',
-    error: '#DC2626',
+    primary: '#000000', // Minimalist Black for main actions/branding
+    accent: '#2962FF', // Tech Blue for highlights without being noisy
+    success: '#00C853', // Sharp Green for incomes/savings
+    danger: '#FF3B30', // Modern Red for expenses
+    warning: '#FFCC00', // Warning/Ant expenses
+    background: '#FAFAFA', // Very clean off-white
+    surface: '#FFFFFF', // Pure white
+    text: '#121212', // Almost black text
+    textLight: '#8E8E93', // Cool gray for subtitles
+    border: '#F2F2F7', // Very subtle border
+    placeholder: '#D1D1D6',
 };
 
 export const layout = {
-    padding: 16,
-    borderRadius: 12,
-    shadow: {
+    padding: 24, // More breathing room
+    borderRadius: 16, // Modern rounded corners
+    shadow: { // Soft, diffuse shadow
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 3,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.05,
+        shadowRadius: 12,
+        elevation: 2,
     },
 };

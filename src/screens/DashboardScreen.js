@@ -41,11 +41,23 @@ export const DashboardScreen = () => {
         };
     }, [incomes, expenses, distribution]);
 
+    const windowWidth = Dimensions.get('window').width;
+    const isMobile = windowWidth < 768;
+
     const SummaryCard = ({ title, amount, subtitle, color, onPress }) => (
-        <TouchableOpacity onPress={onPress} style={{ width: '100%', maxWidth: 400 }}>
+        <TouchableOpacity
+            onPress={onPress}
+            activeOpacity={0.7}
+            style={[
+                styles.cardContainer,
+                { width: isMobile ? '100%' : '48%' } // Responsive width
+            ]}
+        >
             <Card style={[styles.summaryCard, { borderLeftColor: color, borderLeftWidth: 4 }]}>
-                <Text style={styles.cardTitle}>{title}</Text>
-                <Text style={[styles.cardAmount, { color }]}>{formatCurrency(amount)}</Text>
+                <View style={styles.cardHeader}>
+                    <Text style={styles.cardTitle}>{title}</Text>
+                </View>
+                <Text style={[styles.cardAmount, { color: colors.text }]}>{formatCurrency(amount)}</Text>
                 {subtitle && <Text style={styles.cardSubtitle}>{subtitle}</Text>}
             </Card>
         </TouchableOpacity>
@@ -53,14 +65,17 @@ export const DashboardScreen = () => {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <Text style={styles.headerTitle}>Dashboard</Text>
+            <View style={styles.headerContainer}>
+                <Text style={styles.headerTitle}>Dashboard</Text>
+                <Text style={styles.headerDate}>{new Date().toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })}</Text>
+            </View>
 
             <View style={styles.grid}>
                 <SummaryCard
                     title="Ingresos Mensuales"
                     amount={totalIncome}
                     subtitle="Toca para editar"
-                    color={colors.primary}
+                    color={colors.success}
                     onPress={() => navigation.navigate('Ingresos')}
                 />
 
@@ -68,8 +83,8 @@ export const DashboardScreen = () => {
                     title="Ahorro Mensual (Est.)"
                     amount={budgetSavings}
                     subtitle={`Anual: ${formatCurrency(budgetSavings * 12)}`}
-                    color={colors.primary}
-                    onPress={() => navigation.navigate('Configuracion')}
+                    color={colors.success}
+                    onPress={() => navigation.navigate('Configuración')}
                 />
 
                 <SummaryCard
@@ -103,37 +118,57 @@ export const DashboardScreen = () => {
 const styles = StyleSheet.create({
     container: {
         padding: 20,
+        paddingTop: Platform.OS === 'web' ? 20 : 60, // Extra padding for mobile status bar
         backgroundColor: colors.background,
         minHeight: '100%',
     },
+    headerContainer: {
+        marginBottom: 24,
+    },
     headerTitle: {
-        fontSize: 32,
-        fontWeight: 'bold',
+        fontSize: 34,
+        fontWeight: '800',
         color: colors.text,
-        marginBottom: 20,
+        letterSpacing: -1,
+    },
+    headerDate: {
+        fontSize: 16,
+        color: colors.textLight,
+        fontWeight: '500',
+        textTransform: 'capitalize',
     },
     grid: {
         flexDirection: 'row',
         flexWrap: 'wrap',
         gap: 16,
-        justifyContent: 'center', // Centered for web
+        justifyContent: 'space-between',
     },
-    summaryCard: { // Explicitly flat naming to avoid confusion
-        marginBottom: 0, // Reset default generic card margin if used in grid wrapper
+    cardContainer: {
+        marginBottom: 8,
+    },
+    summaryCard: {
+        height: '100%',
+        justifyContent: 'center',
+        elevation: 2, // Softer shadow for Android
+    },
+    cardHeader: {
+        marginBottom: 8,
     },
     cardTitle: {
-        fontSize: 14,
+        fontSize: 13,
         color: colors.textLight,
-        fontWeight: '600',
+        fontWeight: '700',
         textTransform: 'uppercase',
+        letterSpacing: 0.5,
     },
     cardAmount: {
-        fontSize: 24,
+        fontSize: 28,
         fontWeight: 'bold',
-        marginVertical: 8,
+        marginBottom: 4,
     },
     cardSubtitle: {
-        fontSize: 12,
+        fontSize: 13,
         color: colors.textLight,
+        fontWeight: '500',
     }
 });

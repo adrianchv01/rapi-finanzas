@@ -58,7 +58,7 @@ const MainTabs = () => (
       },
     })}
   >
-    <Tab.Screen name="Dashboard" component={DashboardScreen} />
+    <Tab.Screen name="Dashboard" component={DashboardScreen} options={{ headerShown: false }} />
     <Tab.Screen name="Ingresos" component={IncomeScreen} />
     <Tab.Screen name="Gastos" component={ExpensesScreen} />
     <Tab.Screen name="Configuración" component={SettingsScreen} />
