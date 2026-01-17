@@ -117,22 +117,22 @@ export const DashboardScreen = () => {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 20,
-        paddingTop: Platform.OS === 'web' ? 20 : 60, // Extra padding for mobile status bar
+        padding: 16,
+        paddingTop: Platform.OS === 'web' ? 16 : 50, // Reduced padding
         backgroundColor: colors.background,
         minHeight: '100%',
     },
     headerContainer: {
-        marginBottom: 24,
+        marginBottom: 20,
     },
     headerTitle: {
-        fontSize: 34,
+        fontSize: 28, // Reduced from 34
         fontWeight: '800',
         color: colors.text,
         letterSpacing: -1,
     },
     headerDate: {
-        fontSize: 16,
+        fontSize: 14, // Reduced from 16
         color: colors.textLight,
         fontWeight: '500',
         textTransform: 'capitalize',
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     grid: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        gap: 16,
+        gap: 12, // Reduced gap
         justifyContent: 'space-between',
     },
     cardContainer: {
@@ -149,25 +149,25 @@ const styles = StyleSheet.create({
     summaryCard: {
         height: '100%',
         justifyContent: 'center',
-        elevation: 2, // Softer shadow for Android
+        elevation: 2,
     },
     cardHeader: {
-        marginBottom: 8,
+        marginBottom: 6,
     },
     cardTitle: {
-        fontSize: 13,
+        fontSize: 11, // Reduced from 13
         color: colors.textLight,
         fontWeight: '700',
         textTransform: 'uppercase',
         letterSpacing: 0.5,
     },
     cardAmount: {
-        fontSize: 28,
+        fontSize: 22, // Reduced from 28
         fontWeight: 'bold',
-        marginBottom: 4,
+        marginBottom: 2,
     },
     cardSubtitle: {
-        fontSize: 13,
+        fontSize: 11, // Reduced from 13
         color: colors.textLight,
         fontWeight: '500',
     }
