@@ -20,55 +20,36 @@ import { SettingsScreen } from './src/screens/SettingsScreen';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const MainTabs = () => (
-  <Tab.Navigator
-    screenOptions={({ route }) => ({
-      headerStyle: {
-        backgroundColor: colors.background,
-        elevation: 0,
-        shadowOpacity: 0,
-        borderBottomWidth: 0
-      },
-      headerTintColor: colors.text,
-      headerTitleStyle: { fontWeight: 'bold', fontSize: 18 },
-      tabBarStyle: {
-        backgroundColor: colors.surface,
-        borderTopColor: colors.border,
-        height: 100, // Explicitly large for mobile web safe area
-        paddingBottom: 34, // Standard iOS Home Indicator height
-        paddingTop: 12,
-      },
-      tabBarLabelStyle: {
-        fontSize: 10,
-        fontWeight: '600',
-        marginBottom: 4,
-      },
-      tabBarActiveTintColor: colors.primary,
-      tabBarInactiveTintColor: colors.textLight,
-      tabBarIcon: ({ focused, color, size }) => {
-        let iconName = 'ellipse';
-        // Default icon
+import { ResponsiveTabBar } from './src/components/ResponsiveTabBar';
+import { Dimensions } from 'react-native';
 
-        if (route.name === 'Dashboard') {
-          iconName = focused ? 'grid' : 'grid-outline';
-        } else if (route.name === 'Ingresos') {
-          iconName = focused ? 'arrow-up-circle' : 'arrow-up-circle-outline';
-        } else if (route.name === 'Gastos') {
-          iconName = focused ? 'arrow-down-circle' : 'arrow-down-circle-outline';
-        } else if (route.name === 'Configuración') {
-          iconName = focused ? 'settings' : 'settings-outline';
-        }
+const MainTabs = () => {
+  const windowWidth = Dimensions.get('window').width;
+  const isWebDesktop = Platform.OS === 'web' && windowWidth > 768;
 
-        return <Ionicons name={iconName} size={size} color={color} />;
-      },
-    })}
-  >
-    <Tab.Screen name="Dashboard" component={DashboardScreen} options={{ headerShown: false }} />
-    <Tab.Screen name="Ingresos" component={IncomeScreen} />
-    <Tab.Screen name="Gastos" component={ExpensesScreen} />
-    <Tab.Screen name="Configuración" component={SettingsScreen} />
-  </Tab.Navigator>
-);
+  return (
+    <Tab.Navigator
+      tabBar={props => <ResponsiveTabBar {...props} />}
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: colors.background,
+          elevation: 0,
+          shadowOpacity: 0,
+          borderBottomWidth: 0
+        },
+        headerTintColor: colors.text,
+        headerTitleStyle: { fontWeight: 'bold', fontSize: 18 },
+        headerShown: !isWebDesktop, // Hide header on Web Desktop if we want a cleaner dashboard look, or keep it. Let's keep it for now but maybe clean it up.
+      }}
+      sceneContainerStyle={isWebDesktop ? { marginLeft: 250 } : {}}
+    >
+      <Tab.Screen name="Dashboard" component={DashboardScreen} options={{ headerShown: false }} />
+      <Tab.Screen name="Ingresos" component={IncomeScreen} />
+      <Tab.Screen name="Gastos" component={ExpensesScreen} />
+      <Tab.Screen name="Configuración" component={SettingsScreen} />
+    </Tab.Navigator>
+  );
+};
 
 const AppContent = () => {
   const { user, loading } = useAuth();
