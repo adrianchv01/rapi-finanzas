@@ -34,9 +34,14 @@ const MainTabs = () => (
       tabBarStyle: {
         backgroundColor: colors.surface,
         borderTopColor: colors.border,
-        height: Platform.OS === 'ios' ? 88 : 60,
-        paddingBottom: Platform.OS === 'ios' ? 28 : 8,
+        height: Platform.OS === 'ios' ? 90 : 70, // Increased height
+        paddingBottom: Platform.OS === 'ios' ? 30 : 12, // More padding bottom
         paddingTop: 8,
+      },
+      tabBarLabelStyle: {
+        fontSize: 12, // Ensure readable size
+        fontWeight: '600',
+        marginBottom: 4, // Space between icon and text
       },
       tabBarActiveTintColor: colors.primary,
       tabBarInactiveTintColor: colors.textLight,
