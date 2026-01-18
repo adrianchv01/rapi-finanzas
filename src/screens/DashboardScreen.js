@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useFinance } from '../context/FinanceContext';
 import { colors, layout } from '../theme/colors';
@@ -47,11 +47,13 @@ export const DashboardScreen = () => {
     }, [incomes, expenses, distribution]);
 
     const windowWidth = Dimensions.get('window').width;
-    const isMobile = windowWidth < 768;
+    const isWebDesktop = Platform.OS === 'web' && windowWidth > 768;
+    const availableWidth = isWebDesktop ? windowWidth - 250 : windowWidth;
+    const isMobile = availableWidth < 700;
 
     const BalanceHero = () => (
         <View style={styles.heroContainer}>
-            <View>
+            <View style={{ flex: 1 }}>
                 <Text style={styles.heroLabel}>Balance General</Text>
                 <Text style={styles.heroAmount}>{formatCurrency(balance)}</Text>
             </View>
@@ -75,7 +77,9 @@ export const DashboardScreen = () => {
             >
                 <Card style={[styles.summaryCard, { borderLeftColor: color, borderLeftWidth: 4 }]}>
                     <View style={styles.cardHeader}>
-                        <Text style={styles.cardTitle}>{title}</Text>
+                        <View style={{ flex: 1 }}>
+                            <Text style={styles.cardTitle} numberOfLines={1}>{title}</Text>
+                        </View>
                         {icon && <Ionicons name={icon} size={18} color={color} />}
                     </View>
                     <Text style={[styles.cardAmount, { color: colors.text }]}>{formatCurrency(amount)}</Text>
@@ -158,7 +162,7 @@ export const DashboardScreen = () => {
 const styles = StyleSheet.create({
     container: {
         padding: 16,
-        paddingTop: Platform.OS === 'web' ? 16 : 50, // Reduced padding
+        paddingTop: Platform.OS === 'web' ? 16 : 50,
         backgroundColor: colors.background,
         minHeight: '100%',
     },
@@ -166,13 +170,13 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     headerTitle: {
-        fontSize: 28, // Reduced from 34
+        fontSize: 28,
         fontWeight: '800',
         color: colors.text,
         letterSpacing: -1,
     },
     headerDate: {
-        fontSize: 14, // Reduced from 16
+        fontSize: 14,
         color: colors.textLight,
         fontWeight: '500',
         textTransform: 'capitalize',
@@ -180,7 +184,7 @@ const styles = StyleSheet.create({
     grid: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        gap: 12, // Reduced gap
+        gap: 12,
         justifyContent: 'space-between',
     },
     cardContainer: {
@@ -198,19 +202,19 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     cardTitle: {
-        fontSize: 11, // Reduced from 13
+        fontSize: 11,
         color: colors.textLight,
         fontWeight: '700',
         textTransform: 'uppercase',
         letterSpacing: 0.5,
     },
     cardAmount: {
-        fontSize: 22, // Reduced from 28
+        fontSize: 22,
         fontWeight: 'bold',
         marginBottom: 2,
     },
     cardSubtitle: {
-        fontSize: 11, // Reduced from 13
+        fontSize: 11,
         color: colors.textLight,
         fontWeight: '500',
     },
