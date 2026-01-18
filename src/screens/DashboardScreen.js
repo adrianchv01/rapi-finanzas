@@ -163,6 +163,7 @@ const styles = StyleSheet.create({
     container: {
         padding: 16,
         paddingTop: Platform.OS === 'web' ? 16 : 50,
+        paddingBottom: 40, // Extra padding to prevent bottom cutoff
         backgroundColor: colors.background,
         minHeight: '100%',
     },
