@@ -97,7 +97,11 @@ export const DashboardScreen = () => {
     };
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView
+            contentContainerStyle={styles.container}
+            style={{ flex: 1 }}
+            showsVerticalScrollIndicator={true}
+        >
             <View style={styles.headerContainer}>
                 <Text style={styles.headerTitle}>Dashboard</Text>
                 <Text style={styles.headerDate}>{new Date().toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })}</Text>
@@ -163,7 +167,7 @@ const styles = StyleSheet.create({
     container: {
         padding: 16,
         paddingTop: Platform.OS === 'web' ? 16 : 50,
-        paddingBottom: 60, // Extra padding to prevent bottom cutoff
+        paddingBottom: 100, // Extra padding for bottom clearance
         backgroundColor: colors.background,
     },
     headerContainer: {

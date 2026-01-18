@@ -21,32 +21,28 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 import { ResponsiveTabBar } from './src/components/ResponsiveTabBar';
+import { WebLayout } from './src/components/WebLayout';
 import { Dimensions } from 'react-native';
 
 const MainTabs = () => {
-  const windowWidth = Dimensions.get('window').width;
-  const isWebDesktop = Platform.OS === 'web' && windowWidth > 768;
-
   return (
     <Tab.Navigator
-      tabBar={props => <ResponsiveTabBar {...props} />}
+      tabBar={(props) => (
+        <WebLayout tabBar={<ResponsiveTabBar {...props} />}>
+          {props.state.routes[props.state.index].name === 'Dashboard' && <DashboardScreen />}
+          {props.state.routes[props.state.index].name === 'Ingresos' && <IncomeScreen />}
+          {props.state.routes[props.state.index].name === 'Gastos' && <ExpensesScreen />}
+          {props.state.routes[props.state.index].name === 'Configuración' && <SettingsScreen />}
+        </WebLayout>
+      )}
       screenOptions={{
-        headerStyle: {
-          backgroundColor: colors.background,
-          elevation: 0,
-          shadowOpacity: 0,
-          borderBottomWidth: 0
-        },
-        headerTintColor: colors.text,
-        headerTitleStyle: { fontWeight: 'bold', fontSize: 18 },
-        headerShown: !isWebDesktop, // Hide header on Web Desktop if we want a cleaner dashboard look, or keep it. Let's keep it for now but maybe clean it up.
+        headerShown: false,
       }}
-      sceneContainerStyle={isWebDesktop ? { marginLeft: 250, flex: 1 } : { flex: 1 }}
     >
-      <Tab.Screen name="Dashboard" component={DashboardScreen} options={{ headerShown: false }} />
-      <Tab.Screen name="Ingresos" component={IncomeScreen} />
-      <Tab.Screen name="Gastos" component={ExpensesScreen} />
-      <Tab.Screen name="Configuración" component={SettingsScreen} />
+      <Tab.Screen name="Dashboard" component={View} />
+      <Tab.Screen name="Ingresos" component={View} />
+      <Tab.Screen name="Gastos" component={View} />
+      <Tab.Screen name="Configuración" component={View} />
     </Tab.Navigator>
   );
 };

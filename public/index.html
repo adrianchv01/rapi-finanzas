@@ -16,25 +16,21 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
   <style>
-    /* Prevent body scrolling on iOS to feel more native */
+    * {
+      box-sizing: border-box;
+    }
+
     html,
-    body {
+    body,
+    #root {
       height: 100%;
       width: 100%;
       margin: 0;
-      overflow: auto;
-    }
-
-    #root {
-      min-height: 100%;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
+      padding: 0;
+      overflow: hidden;
     }
 
     body {
-      margin: 0;
-      overscroll-behavior-y: none;
       background-color: #FAFAFA;
       -webkit-tap-highlight-color: transparent;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
