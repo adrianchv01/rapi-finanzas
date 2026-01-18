@@ -111,26 +111,29 @@ export const ResponsiveTabBar = ({ state, descriptors, navigation }) => {
 };
 
 const styles = StyleSheet.create({
+    // Web Sidebar
     sidebar: {
         ...Platform.select({
             web: {
                 position: 'fixed',
                 height: '100vh',
+                left: 0,
+                top: 0,
             },
             default: {
                 position: 'absolute',
                 height: '100%',
+                left: 0,
+                top: 0,
             }
         }),
-        left: 0,
-        top: 0,
         width: 250,
         backgroundColor: colors.surface,
         borderRightWidth: 1,
         borderRightColor: colors.border,
         padding: 24,
         justifyContent: 'space-between',
-        zIndex: 100,
+        zIndex: 1000,
     },
     logoIcon: {
         width: 32,

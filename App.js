@@ -27,22 +27,39 @@ import { Dimensions } from 'react-native';
 const MainTabs = () => {
   return (
     <Tab.Navigator
-      tabBar={(props) => (
-        <WebLayout tabBar={<ResponsiveTabBar {...props} />}>
-          {props.state.routes[props.state.index].name === 'Dashboard' && <DashboardScreen />}
-          {props.state.routes[props.state.index].name === 'Ingresos' && <IncomeScreen />}
-          {props.state.routes[props.state.index].name === 'Gastos' && <ExpensesScreen />}
-          {props.state.routes[props.state.index].name === 'Configuración' && <SettingsScreen />}
-        </WebLayout>
-      )}
+      tabBar={(props) => <ResponsiveTabBar {...props} />}
       screenOptions={{
         headerShown: false,
       }}
     >
-      <Tab.Screen name="Dashboard" component={View} />
-      <Tab.Screen name="Ingresos" component={View} />
-      <Tab.Screen name="Gastos" component={View} />
-      <Tab.Screen name="Configuración" component={View} />
+      <Tab.Screen name="Dashboard">
+        {(props) => (
+          <WebLayout>
+            <DashboardScreen {...props} />
+          </WebLayout>
+        )}
+      </Tab.Screen>
+      <Tab.Screen name="Ingresos">
+        {(props) => (
+          <WebLayout>
+            <IncomeScreen {...props} />
+          </WebLayout>
+        )}
+      </Tab.Screen>
+      <Tab.Screen name="Gastos">
+        {(props) => (
+          <WebLayout>
+            <ExpensesScreen {...props} />
+          </WebLayout>
+        )}
+      </Tab.Screen>
+      <Tab.Screen name="Configuración">
+        {(props) => (
+          <WebLayout>
+            <SettingsScreen {...props} />
+          </WebLayout>
+        )}
+      </Tab.Screen>
     </Tab.Navigator>
   );
 };
