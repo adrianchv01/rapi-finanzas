@@ -18,12 +18,17 @@
   <style>
     /* Prevent body scrolling on iOS to feel more native */
     html,
-    body,
-    #root {
+    body {
       height: 100%;
       width: 100%;
+      margin: 0;
+      overflow: auto;
+    }
+
+    #root {
+      min-height: 100%;
+      width: 100%;
       display: flex;
-      /* Ensure root behaves as a flex container */
       flex-direction: column;
     }
 

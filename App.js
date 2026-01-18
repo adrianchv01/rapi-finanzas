@@ -41,7 +41,7 @@ const MainTabs = () => {
         headerTitleStyle: { fontWeight: 'bold', fontSize: 18 },
         headerShown: !isWebDesktop, // Hide header on Web Desktop if we want a cleaner dashboard look, or keep it. Let's keep it for now but maybe clean it up.
       }}
-      sceneContainerStyle={isWebDesktop ? { marginLeft: 250 } : {}}
+      sceneContainerStyle={isWebDesktop ? { marginLeft: 250, flex: 1 } : { flex: 1 }}
     >
       <Tab.Screen name="Dashboard" component={DashboardScreen} options={{ headerShown: false }} />
       <Tab.Screen name="Ingresos" component={IncomeScreen} />
